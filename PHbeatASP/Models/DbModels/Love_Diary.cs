@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using DefaultNamespace;
-
-namespace PHbeatASP.Models;
+namespace PHbeatASP.Models.DbModels;
 
 public class LoveDiary
 {

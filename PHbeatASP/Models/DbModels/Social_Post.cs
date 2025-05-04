@@ -1,4 +1,4 @@
-namespace DefaultNamespace;
+namespace PHbeatASP.Models.DbModels;
 
 public class SocialPost
 {

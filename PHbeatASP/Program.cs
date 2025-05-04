@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using PHbeatASP.Models;
+using PHbeatASP.Models.DbModels;
 using Pomelo.EntityFrameworkCore.MySql; // 引入 MySQL 支持
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("voice", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.User.Identity?.Name ?? context.Request.Headers["X-Client-Id"],
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
