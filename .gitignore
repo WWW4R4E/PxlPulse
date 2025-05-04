@@ -1,0 +1,131 @@
+# ================
+# 通用忽略规则
+# ================
+.DS_Store
+*.swp
+._*
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.pid
+*.seed
+*.pid.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.njsproj
+*.sln
+*.jfm
+
+# ================
+# Uniapp 特定规则
+# ================
+# HBuilderX 生成文件
+unpackage/
+.hbuilderx/
+.project
+
+# 依赖目录
+node_modules/
+/dist/
+/build/
+
+# 本地开发环境
+.env.local
+.env.*.local
+
+# 日志文件
+logs/
+*.log
+
+# 调试文件
+debug/
+
+# 缓存目录
+.cache/
+
+# ================
+# ASP.NET Core 特定规则
+# ================
+# 编译输出
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio 用户特定文件
+*.userprefs
+*.usertasks
+
+# 发布输出
+publish/
+
+# Rider 特定文件
+.idea/
+*.sln.iml
+
+# NuGet 包目录
+packages/
+
+# .NET Core 项目文件
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# VS Code 临时文件
+.vscode/
+
+# 本地开发设置
+appsettings.Development.json
+launchSettings.json
+
+# ================
+# 操作系统生成文件
+# ================
+# Windows
+[Tt]humbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+._*
+
+# Linux
+*~
+
+# ================
+# 测试相关
+# ================
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# ================
+# 数据库文件
+# ================
+*.mdf
+*.ldf
+*.sdf
+
+# ================
+# 其他
+# ================
+# 本地环境变量文件
+.env
+.env.local
+*.env
+
+# 机密文件
+*.pem
+*.key
+*.cer
+*.pfx
+*.secret
