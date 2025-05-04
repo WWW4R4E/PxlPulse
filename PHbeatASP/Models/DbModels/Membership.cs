@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace DefaultNamespace;
+namespace PHbeatASP.Models.DbModels;
 
 public class Membership
 {

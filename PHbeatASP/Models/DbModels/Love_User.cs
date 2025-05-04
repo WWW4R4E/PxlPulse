@@ -1,6 +1,6 @@
-using PHbeatASP.Models;
 
-namespace DefaultNamespace;
+
+namespace PHbeatASP.Models.DbModels;
 
 public class LoveUser
 {

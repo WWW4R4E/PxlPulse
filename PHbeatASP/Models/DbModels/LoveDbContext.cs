@@ -1,7 +1,6 @@
-﻿using DefaultNamespace;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace PHbeatASP.Models;
+namespace PHbeatASP.Models.DbModels;
 
 public class LoveDbContext : DbContext
 {
