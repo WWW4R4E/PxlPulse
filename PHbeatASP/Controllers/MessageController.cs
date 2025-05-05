@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using PHbeatASP.Models.ApiModels;
 using PHbeatASP.Services;
 
@@ -17,8 +17,8 @@ namespace PHbeatASP.Controllers
             _messageService = messageService;
         }
 
-        [HttpPost("send")]
-        public async Task<IActionResult> SendMessage([FromBody] MessageRequest request)
+        [HttpGet("send")]
+        public async Task<IActionResult> SendMessage([FromQuery] MessageRequest request)
         {
             var result = await _messageService.SendMessageAsync(request);
             _logger.LogInformation("消息发送: {0}", result);

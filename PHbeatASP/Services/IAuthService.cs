@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PHbeatASP.Models.ApiModels;
 using PHbeatASP.Models.DbModels;
@@ -12,7 +13,8 @@ namespace PHbeatASP.Services;
 public interface IAuthService
 {
     Task<AuthResponse> RegisterAsync(ExtendedRegisterRequest request);
-    Task<AuthResponse> LoginAsync(LoginRequest request);
+    Task<AuthResponse> LoginEmailAsync(ExtendedLoginRequest request);
+    Task<AuthResponse> LoginPhoneAsync(ExtendedLoginRequest request);
 }
 
 public class AuthService : IAuthService
@@ -21,8 +23,8 @@ public class AuthService : IAuthService
     private readonly UserManager<LoveUser> _userManager;
     private readonly SignInManager<LoveUser> _signInManager;
     private readonly IConfiguration _configuration;
-    
-    public AuthService(ILogger<AuthService> logger, UserManager<LoveUser> userManager, 
+
+    public AuthService(ILogger<AuthService> logger, UserManager<LoveUser> userManager,
         SignInManager<LoveUser> signInManager, IConfiguration configuration)
     {
         _logger = logger;
@@ -78,9 +80,9 @@ public class AuthService : IAuthService
     {
         try
         {
-            if (await _userManager.FindByEmailAsync(request.BaseRequest.Email) != null)
+            if (await _userManager.FindByEmailAsync(request.Email) != null)
             {
-                _logger.LogWarning("注册尝试使用已注册的邮箱: {Email}", request.BaseRequest.Email);
+                _logger.LogWarning("注册尝试使用已注册的邮箱: {Email}", request.Email);
                 return new AuthResponse
                 {
                     Token = null,
@@ -91,7 +93,7 @@ public class AuthService : IAuthService
 
             var user = new LoveUser
             {
-                Email = request.BaseRequest.Email,
+                Email = request.Email,
                 UserName = request.Username,
                 PhoneNumber = request.PhoneNumber,
                 Gender = request.Gender,
@@ -100,12 +102,12 @@ public class AuthService : IAuthService
                 RegisterTime = DateTime.UtcNow,
             };
 
-            var result = await _userManager.CreateAsync(user, request.BaseRequest.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
-                _logger.LogError("用户创建失败，邮箱: {Email}, 错误: {Errors}", 
-                    request.BaseRequest.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
-                
+                _logger.LogError("用户创建失败，邮箱: {Email}, 错误: {Errors}",
+                    request.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
+
                 return new AuthResponse
                 {
                     Token = null,
@@ -127,9 +129,9 @@ public class AuthService : IAuthService
                 _logger.LogError("添加声明到用户失败: {UserId} ({Email}), 错误: {Errors}",
                     user.Id, user.Email, string.Join(", ", claimResult.Errors.Select(e => e.Description)));
             }
-            
+
             _logger.LogInformation("用户注册成功: {UserId} ({Email})", user.Id, user.Email);
-            
+
             return new AuthResponse
             {
                 Token = GenerateToken(user),
@@ -139,7 +141,7 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "注册过程中发生错误，邮箱: {Email}", request.BaseRequest.Email);
+            _logger.LogError(ex, "注册过程中发生错误，邮箱: {Email}", request.Email);
             return new AuthResponse
             {
                 Token = null,
@@ -149,14 +151,79 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<AuthResponse> LoginAsync(LoginRequest request)
+    public async Task<AuthResponse> LoginEmailAsync(ExtendedLoginRequest request)
+    {
+        // 验证邮箱和密码是否匹配
+        if (!string.IsNullOrEmpty(request.Email) && !string.IsNullOrEmpty(request.Password))
+        {
+            // 实现邮箱+密码的验证逻辑
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(request.Email);
+                if (user == null)
+                {
+                    _logger.LogWarning("登录尝试使用不存在的邮箱: {Email}", request.Email);
+                    return new AuthResponse
+                    {
+                        Token = null,
+                        User = null,
+                        Error = "用户不存在"
+                    };
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("用户登录成功: {UserId} ({Email})", user.Id, user.Email);
+
+                    return new AuthResponse
+                    {
+                        Token = GenerateToken(user),
+                        User = CreateUserInfo(user),
+                        Error = null
+                    };
+                }
+
+                _logger.LogWarning("登录失败，邮箱: {Email}", request.Email);
+
+                return new AuthResponse
+                {
+                    Token = null,
+                    User = null,
+                    Error = "密码错误"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "登录过程中发生错误，邮箱: {Email}", request.Email);
+                return new AuthResponse
+                {
+                    Token = null,
+                    User = null,
+                    Error = "发生内部服务器错误"
+                };
+            }
+        }
+        else
+        {
+            _logger.LogWarning("登录尝试使用无效的邮箱或密码");
+            return new AuthResponse
+            {
+                Token = null,
+                User = null,
+                Error = "邮箱或密码无效"
+            };
+        }
+    }
+
+    public async Task<AuthResponse> LoginPhoneAsync(ExtendedLoginRequest request)
     {
         try
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
             if (user == null)
             {
-                _logger.LogWarning("登录尝试使用不存在的邮箱: {Email}", request.Email);
+                _logger.LogWarning("登录尝试使用不存在的手机号: {PhoneNumber}", request.PhoneNumber);
                 return new AuthResponse
                 {
                     Token = null,
@@ -165,31 +232,31 @@ public class AuthService : IAuthService
                 };
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
-            if (result.Succeeded)
+            // 检查用户的手机号是否匹配（冗余判断可选）
+            if (user.PhoneNumber != request.PhoneNumber)
             {
-                _logger.LogInformation("用户登录成功: {UserId} ({Email})", user.Id, user.Email);
-                
+                _logger.LogWarning("手机号不匹配，手机号: {PhoneNumber}", request.PhoneNumber);
                 return new AuthResponse
                 {
-                    Token = GenerateToken(user),
-                    User = CreateUserInfo(user),
-                    Error = null
+                    Token = null,
+                    User = null,
+                    Error = "手机号不匹配"
                 };
             }
-            
-            _logger.LogWarning("登录失败，邮箱: {Email}", request.Email);
-            
+
+            // 登录成功返回Token和用户信息
+            _logger.LogInformation("用户通过手机号登录成功: {UserId} ({Email})", user.Id, user.Email);
+
             return new AuthResponse
             {
-                Token = null,
-                User = null,
-                Error = "密码错误"
+                Token = GenerateToken(user),
+                User = CreateUserInfo(user),
+                Error = null
             };
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "登录过程中发生错误，邮箱: {Email}", request.Email);
+            _logger.LogError(ex, "通过手机号登录过程中发生错误，手机号: {PhoneNumber}", request.PhoneNumber);
             return new AuthResponse
             {
                 Token = null,
@@ -199,11 +266,12 @@ public class AuthService : IAuthService
         }
     }
 
+
     private async Task<string> GenerateUsername(string email)
     {
         // 从邮箱生成用户名的基本逻辑
         var username = email.Split('@')[0];
-        
+
         // 如果用户名已存在，添加随机后缀
         var originalUsername = username;
         var counter = 1;
@@ -211,7 +279,7 @@ public class AuthService : IAuthService
         {
             username = $"{originalUsername}{counter++}";
         }
-        
+
         return username;
     }
 }

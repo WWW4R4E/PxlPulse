@@ -2,6 +2,7 @@
 
 namespace PHbeatASP.Models.ApiModels;
 
+// 语音合成请求
 public class TtsRequest
 {
     [JsonProperty("tex")]

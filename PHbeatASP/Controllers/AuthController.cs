@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using PHbeatASP.Models.ApiModels;
 using PHbeatASP.Services;
@@ -21,16 +20,26 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] ExtendedRegisterRequest request)
     {
-        _logger.LogInformation("用户注册: {Email}", request.BaseRequest.Email);
+        _logger.LogInformation("用户注册: {Email}", request.Email);
         var result = await _authService.RegisterAsync(request);
         return Ok(result);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] ExtendedLoginRequest request)
     {
-        _logger.LogInformation("用户登录: {Email}", request.Email);
-        var result = await _authService.LoginAsync(request);
+        AuthResponse result;
+        _logger.LogInformation("用户登录: {auth}", request.Email ?? request.PhoneNumber);
+        if  (request.Email == null)
+        { 
+            result = await _authService.LoginEmailAsync(request);
+        }
+        else
+        {
+            result = await _authService.LoginPhoneAsync(request);
+        }
+       
+        
         return Ok(result);
     }
 }

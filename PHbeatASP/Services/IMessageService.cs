@@ -1,6 +1,7 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.SignalR;
 using PHbeatASP.Hub;
+using PHbeatASP.Models;
 using PHbeatASP.Models.ApiModels;
 using PHbeatASP.Models.DbModels;
 
@@ -32,18 +33,19 @@ public class MessageService : IMessageService
         {
             SessionId = request.SessionId,
             Text = request.Text,
+            Role = Enums.RoleType.User,
             Timestamp = DateTime.UtcNow
         };
-
-        if (!_messages.ContainsKey(request.SessionId))
-        {
-            _messages[request.SessionId] = new List<MessageResponse>();
-        }
-
         _messages[request.SessionId].Add(response);
-        // TODO 广播改成点播
-        await _hubContext.Clients.Group(request.SessionId).SendAsync("ReceiveMessage", response);
-        return await Task.FromResult(response);
+        var nplResult = await _nlpService.ProcessAsync(request.Text, request.SessionId);
+        var aiResponse = new MessageResponse
+        {
+            SessionId = request.SessionId,
+            Text = nplResult,
+            Role = Enums.RoleType.Assistant,
+            Timestamp = DateTime.UtcNow
+        };
+        return await Task.FromResult(aiResponse);
     }
 
     public async Task<IEnumerable<MessageResponse>> GetMessagesBySessionIdAsync(string sessionId)
@@ -56,4 +58,3 @@ public class MessageService : IMessageService
         return await Task.FromResult(Enumerable.Empty<MessageResponse>());
     }
 }
-

@@ -2,6 +2,7 @@
 
 namespace PHbeatASP.Models.ApiModels;
 
+// 文本生成请求
 public class NlpResponse
 {
     [JsonProperty("result")]

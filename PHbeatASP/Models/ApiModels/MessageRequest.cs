@@ -1,8 +1,10 @@
-﻿namespace PHbeatASP.Models.ApiModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PHbeatASP.Models.ApiModels
 {
     public class MessageRequest
     {
         public string SessionId { get; set; }
-        public string Text { get; set; }
+        [Required] public string Text { get; set; }
     }
 }
