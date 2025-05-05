@@ -2,9 +2,9 @@ namespace PHbeatASP.Models.DbModels;
 
 public class LoveDiary
 {
-    public int DiaryId { get; set; }
-    public int UserId { get; set; }
-    public int CharacterId { get; set; }
+    public string DiaryId { get; set; }
+    public string UserId { get; set; }
+    public string CharacterId { get; set; }
 
     public required string DiaryTitle { get; set; }
 

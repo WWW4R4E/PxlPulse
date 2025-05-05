@@ -22,7 +22,8 @@ public class AuthService : IAuthService
     private readonly SignInManager<LoveUser> _signInManager;
     private readonly IConfiguration _configuration;
     
-    public AuthService(ILogger<AuthService> logger, UserManager<LoveUser> userManager, SignInManager<LoveUser> signInManager, IConfiguration configuration)
+    public AuthService(ILogger<AuthService> logger, UserManager<LoveUser> userManager, 
+        SignInManager<LoveUser> signInManager, IConfiguration configuration)
     {
         _logger = logger;
         _userManager = userManager;
@@ -32,23 +33,45 @@ public class AuthService : IAuthService
 
     private string GenerateToken(LoveUser user)
     {
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+
+        var keyString = _configuration["Jwt:Key"];
+        if (string.IsNullOrEmpty(keyString))
+        {
+            _logger.LogError("JWT Key is missing in configuration.");
+            throw new InvalidOperationException("JWT Key is not configured.");
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
-            claims: new[] 
+            claims: new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             },
-            expires: DateTime.Now.AddHours(1),
+            expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private UserInfo CreateUserInfo(LoveUser user)
+    {
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+
+        return new UserInfo
+        {
+            Username = user.UserName,
+            Email = user.Email,
+            Avatar = user.Avatar
+        };
     }
 
     public async Task<AuthResponse> RegisterAsync(ExtendedRegisterRequest request)
@@ -57,7 +80,7 @@ public class AuthService : IAuthService
         {
             if (await _userManager.FindByEmailAsync(request.BaseRequest.Email) != null)
             {
-                _logger.LogWarning("Registration attempt with already registered email: {Email}", request.BaseRequest.Email);
+                _logger.LogWarning("注册尝试使用已注册的邮箱: {Email}", request.BaseRequest.Email);
                 return new AuthResponse
                 {
                     Token = null,
@@ -69,8 +92,9 @@ public class AuthService : IAuthService
             var user = new LoveUser
             {
                 Email = request.BaseRequest.Email,
-                Username = request.Username,
+                UserName = request.Username,
                 PhoneNumber = request.PhoneNumber,
+                Gender = request.Gender,
                 Avatar = "https://cdn.jsdelivr.net/gh/PHBeat/PHBeat-CDN@main/PHBeat/Avatar/default.jpg",
                 UserType = "普通用户",
                 RegisterTime = DateTime.UtcNow,
@@ -79,7 +103,7 @@ public class AuthService : IAuthService
             var result = await _userManager.CreateAsync(user, request.BaseRequest.Password);
             if (!result.Succeeded)
             {
-                _logger.LogError("User creation failed for email: {Email}, Errors: {Errors}", 
+                _logger.LogError("用户创建失败，邮箱: {Email}, 错误: {Errors}", 
                     request.BaseRequest.Email, string.Join(", ", result.Errors.Select(e => e.Description)));
                 
                 return new AuthResponse
@@ -90,27 +114,32 @@ public class AuthService : IAuthService
                 };
             }
 
-            await _userManager.AddToRoleAsync(user, user.UserType);
-            await _userManager.AddClaimAsync(user, new Claim("UserType", user.UserType));
+            var roleResult = await _userManager.AddToRoleAsync(user, user.UserType);
+            if (!roleResult.Succeeded)
+            {
+                _logger.LogError("添加用户到角色失败: {UserId} ({Email}), 错误: {Errors}",
+                    user.Id, user.Email, string.Join(", ", roleResult.Errors.Select(e => e.Description)));
+            }
+
+            var claimResult = await _userManager.AddClaimAsync(user, new Claim("UserType", user.UserType));
+            if (!claimResult.Succeeded)
+            {
+                _logger.LogError("添加声明到用户失败: {UserId} ({Email}), 错误: {Errors}",
+                    user.Id, user.Email, string.Join(", ", claimResult.Errors.Select(e => e.Description)));
+            }
             
-            _logger.LogInformation("User registered successfully: {UserId} ({Email})", user.UserId, user.Email);
+            _logger.LogInformation("用户注册成功: {UserId} ({Email})", user.Id, user.Email);
             
             return new AuthResponse
             {
                 Token = GenerateToken(user),
-                User = new UserInfo
-                {
-                    UserId = user.UserId,
-                    Username = user.Username,
-                    Email = user.Email,
-                    Avatar = user.Avatar
-                },
+                User = CreateUserInfo(user),
                 Error = null
             };
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred during registration for email: {Email}", request.BaseRequest.Email);
+            _logger.LogError(ex, "注册过程中发生错误，邮箱: {Email}", request.BaseRequest.Email);
             return new AuthResponse
             {
                 Token = null,
@@ -127,7 +156,7 @@ public class AuthService : IAuthService
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                _logger.LogWarning("Login attempt with non-existent email: {Email}", request.Email);
+                _logger.LogWarning("登录尝试使用不存在的邮箱: {Email}", request.Email);
                 return new AuthResponse
                 {
                     Token = null,
@@ -139,23 +168,17 @@ public class AuthService : IAuthService
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User logged in successfully: {UserId} ({Email})", user.UserId, user.Email);
+                _logger.LogInformation("用户登录成功: {UserId} ({Email})", user.Id, user.Email);
                 
                 return new AuthResponse
                 {
                     Token = GenerateToken(user),
-                    User = new UserInfo
-                    {
-                        UserId = user.UserId,
-                        Username = user.Username,
-                        Email = user.Email,
-                        Avatar = user.Avatar
-                    },
+                    User = CreateUserInfo(user),
                     Error = null
                 };
             }
             
-            _logger.LogWarning("Failed login attempt for email: {Email}", request.Email);
+            _logger.LogWarning("登录失败，邮箱: {Email}", request.Email);
             
             return new AuthResponse
             {
@@ -166,7 +189,7 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred during login for email: {Email}", request.Email);
+            _logger.LogError(ex, "登录过程中发生错误，邮箱: {Email}", request.Email);
             return new AuthResponse
             {
                 Token = null,
@@ -184,7 +207,7 @@ public class AuthService : IAuthService
         // 如果用户名已存在，添加随机后缀
         var originalUsername = username;
         var counter = 1;
-        while (await _userManager.FindByNameAsync(username) == null)
+        while (await _userManager.FindByNameAsync(username) != null)
         {
             username = $"{originalUsername}{counter++}";
         }

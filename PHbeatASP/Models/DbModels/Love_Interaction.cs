@@ -2,9 +2,9 @@ namespace PHbeatASP.Models.DbModels;
 
 public class LoveInteraction
 {
-    public int InteractionId { get; set; }
-    public int UserId { get; set; }
-    public int CharacterId { get; set; }
+    public string InteractionId { get; set; }
+    public string UserId { get; set; }
+    public string CharacterId { get; set; }
     public string InteractionContent { get; set; }
     public DateTime InteractionTime { get; set; }
 

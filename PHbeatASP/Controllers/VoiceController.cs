@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using PHbeatASP.Models.ApiModels;
 using PHbeatASP.Services;
 
@@ -17,23 +17,20 @@ public class VoiceController : ControllerBase
         _voiceService = voiceService;
     }
 
-[HttpPost("process")]
-public async Task<IActionResult> ProcessVoice([FromForm] VoiceRequest request)
-{
-    try
+    [HttpPost("process")]
+    public async Task<IActionResult> ProcessVoice([FromForm] VoiceRequest request)
     {
-        _logger.LogInformation("Processing voice request: {RequestId}", request.SessionId);
-        var result = await _voiceService.ProcessVoiceAsync(request);
-        _logger.LogInformation("Voice request processed successfully: {ResultId}", result?.Text);
-        return Ok(result);
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error processing voice request");
-        return StatusCode(500, "Internal server error");
+        try
+        {
+            _logger.LogInformation("正在处理语音请求: {RequestId}", request.SessionId);
+            var result = await _voiceService.ProcessVoiceAsync(request);
+            _logger.LogInformation("语音请求处理成功: {ResultId}", result?.Text);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "处理语音请求时发生错误");
+            return StatusCode(500, "服务器内部错误");
+        }
     }
 }
-
-}
-
-

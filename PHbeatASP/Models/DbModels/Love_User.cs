@@ -1,21 +1,15 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace PHbeatASP.Models.DbModels;
 
-public class LoveUser
+public class LoveUser:IdentityUser
 {
-    public int UserId { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
     public DateTime RegisterTime { get; set; }
     public string Avatar { get; set; }
-    public string Gender { get; set; }
-    public DateTime Birthday { get; set; }
+    public Enums.GenderType Gender { get; set; }
+    public DateTime? Birthday { get; set; }
     public string UserType { get; set; } = "普通用户";
-
-    [JsonIgnore]  // 新增密码哈希字段
-    public string PasswordHash { get; set; }
 
     // 导航属性
     public ICollection<AiCharacter> AICharacters { get; set; }

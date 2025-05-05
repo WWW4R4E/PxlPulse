@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace PHbeatASP.Models.DbModels;
 
-public class LoveDbContext : DbContext
+public class LoveDbContext : IdentityDbContext<LoveUser, IdentityRole, string>
 {
     public DbSet<LoveUser> Users { get; set; }
     public DbSet<AiCharacter> AiCharacters { get; set; }
@@ -11,6 +13,7 @@ public class LoveDbContext : DbContext
     public DbSet<SocialPost> SocialPosts { get; set; }
     public DbSet<Membership> Memberships { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<IdentityRole> Roles { get; set; }
 
     public LoveDbContext(DbContextOptions<LoveDbContext> options) : base(options)
     {
@@ -19,9 +22,15 @@ public class LoveDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
         // LoveUser 配置
+        modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(u => u.UserId);
+        modelBuilder.Entity<IdentityUserRole<string>>().HasKey(r => new { r.UserId, r.RoleId });
+        modelBuilder.Entity<IdentityUserClaim<string>>().HasKey(c => c.Id);
+        modelBuilder.Entity<IdentityUserToken<string>>().HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+
         modelBuilder.Entity<LoveUser>()
-            .HasKey(u => u.UserId);
+            .HasKey(u => u.Id);
 
         modelBuilder.Entity<LoveUser>()
             .HasMany(u => u.AICharacters)
@@ -47,6 +56,13 @@ public class LoveDbContext : DbContext
             .HasMany(u => u.Memberships)
             .WithOne(m => m.User)
             .HasForeignKey(m => m.UserId);
+        
+        // 角色种子数据
+        modelBuilder.Entity<IdentityRole>().HasData(
+            new IdentityRole { Id = "1", Name = "普通用户", NormalizedName = "普通用户" },
+            new IdentityRole { Id = "2", Name = "会员用户", NormalizedName = "会员用户" },
+            new IdentityRole { Id = "3", Name = "管理员", NormalizedName = "管理员" }
+        );
 
         // AICharacter 配置
         modelBuilder.Entity<AiCharacter>()

@@ -5,9 +5,9 @@ namespace PHbeatASP.Models.DbModels;
 public class Membership
 {
     [Key]
-    public int MembershipId { get; set; }
-    public int UserId { get; set; }
-    public int MembershipLevel { get; set; }
+    public string MembershipId { get; set; }
+    public string UserId { get; set; }
+    public string MembershipLevel { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 

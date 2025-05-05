@@ -6,9 +6,9 @@ namespace PHbeatASP.Services;
 
 public interface IUserService
 {
-    Task<LoveUser> GetUserProfileAsync(int userId);
-    Task UpdateUserProfileAsync(int userId, UserProfileUpdate update);
-    Task MarkNotificationAsReadAsync(int notificationId);
+    Task<LoveUser> GetUserProfileAsync(string userId);
+    Task UpdateUserProfileAsync(string userId, UserProfileUpdate update);
+    Task MarkNotificationAsReadAsync(string notificationId);
 }
 
 public class UserService : IUserService
@@ -20,29 +20,30 @@ public class UserService : IUserService
         _dbContext = dbContext;
     }
 
-    public async Task<LoveUser> GetUserProfileAsync(int userId)
+    public async Task<LoveUser> GetUserProfileAsync(string userId)
     {
         return (await _dbContext.Users
             .Include(u => u.Notifications)
-            .FirstOrDefaultAsync(u => u.UserId == userId))!;
+            .FirstOrDefaultAsync(u => u.Id == userId))!;
     }
 
-    public async Task UpdateUserProfileAsync(int userId, UserProfileUpdate update)
+
+    public async Task UpdateUserProfileAsync(string userId, UserProfileUpdate update)
     {
         var user = await _dbContext.Users.FindAsync(userId);
         if (user == null) throw new ArgumentException("User not found");
-        if (!string.IsNullOrEmpty(update.Username)) user.Username = update.Username;
+        if (!string.IsNullOrEmpty(update.Username)) user.UserName = update.Username;
         if (!string.IsNullOrEmpty(update.Email)) user.Email = update.Email;
         if (!string.IsNullOrEmpty(update.PhoneNumber)) user.PhoneNumber = update.PhoneNumber;
         if (update.Birthday.HasValue) user.Birthday = update.Birthday.Value;
         if (!string.IsNullOrEmpty(update.Avatar)) user.Avatar = update.Avatar;
-        if (!string.IsNullOrEmpty(update.Gender)) user.Gender = update.Gender;
+        if (update.Gender.HasValue) user.Gender = update.Gender.Value;
         if (!string.IsNullOrEmpty(update.UserType)) user.UserType = update.UserType;
 
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task MarkNotificationAsReadAsync(int notificationId)
+    public async Task MarkNotificationAsReadAsync(string notificationId)
     {
         var notification = await _dbContext.Notifications.FindAsync(notificationId);
         if (notification != null)

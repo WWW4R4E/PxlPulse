@@ -8,4 +8,6 @@ public class ExtendedRegisterRequest
     
     public string Username { get; set; }
     public string PhoneNumber { get; set; }
+    public Enums.GenderType Gender { get; set; }
 }
+

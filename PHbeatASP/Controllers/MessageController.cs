@@ -8,10 +8,12 @@ namespace PHbeatASP.Controllers
     [Route("api/[controller]")]
     public class MessageController : ControllerBase
     {
+        private ILogger<MessageController> _logger;
         private readonly IMessageService _messageService;
 
-        public MessageController(IMessageService messageService)
+        public MessageController(ILogger<MessageController> logger,IMessageService messageService)
         {
+            _logger = logger;
             _messageService = messageService;
         }
 
@@ -19,6 +21,7 @@ namespace PHbeatASP.Controllers
         public async Task<IActionResult> SendMessage([FromBody] MessageRequest request)
         {
             var result = await _messageService.SendMessageAsync(request);
+            _logger.LogInformation("消息发送: {0}", result);
             return Ok(result);
         }
 
@@ -26,6 +29,7 @@ namespace PHbeatASP.Controllers
         public async Task<IActionResult> GetMessages(string sessionId)
         {
             var result = await _messageService.GetMessagesBySessionIdAsync(sessionId);
+            _logger.LogInformation("消息查询: {0}", result);
             return Ok(result);
         }
         
