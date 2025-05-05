@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using PHbeatASP.Models._ApiModels;
+using PHbeatASP.Models.ApiModels;
 
 namespace PHbeatASP.Services;
 

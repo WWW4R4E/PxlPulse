@@ -1,4 +1,4 @@
-﻿namespace PHbeatASP.Models._ApiModels;
+﻿namespace PHbeatASP.Models.ApiModels;
 
 public class VoiceRequest
 {

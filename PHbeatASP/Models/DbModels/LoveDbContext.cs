@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace PHbeatASP.Models.DbModels;
 
@@ -10,7 +10,8 @@ public class LoveDbContext : DbContext
     public DbSet<LoveDiary> LoveDiaries { get; set; }
     public DbSet<SocialPost> SocialPosts { get; set; }
     public DbSet<Membership> Memberships { get; set; }
-    
+    public DbSet<Notification> Notifications { get; set; }
+
     public LoveDbContext(DbContextOptions<LoveDbContext> options) : base(options)
     {
     }
@@ -100,5 +101,14 @@ public class LoveDbContext : DbContext
             .HasOne(m => m.User)
             .WithMany(u => u.Memberships)
             .HasForeignKey(m => m.UserId);
+
+        // 新增通知配置
+        modelBuilder.Entity<Notification>()
+            .HasKey(n => n.NotificationId);
+            
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(n => n.UserId);
     }
 }

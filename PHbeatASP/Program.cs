@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
-using PHbeatASP.Models;
 using PHbeatASP.Models.DbModels;
-using Pomelo.EntityFrameworkCore.MySql; 
+using Pomelo.EntityFrameworkCore.MySql;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,19 +50,17 @@ builder.Services.AddRateLimiter(options =>
             }));
 });
 
-
-// 配置Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// 注册控制器和 OpenAPI 服务
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
+
 
 app.UseHttpsRedirection();
 

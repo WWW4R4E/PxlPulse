@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace PHbeatASP.Models._ApiModels;
+namespace PHbeatASP.Models.ApiModels;
 
 public class NlpResponse
 {
