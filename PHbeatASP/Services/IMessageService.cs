@@ -16,13 +16,11 @@ public interface IMessageService
 public class MessageService : IMessageService
 {
     private readonly ConcurrentDictionary<string, List<MessageResponse>> _messages = new();
-    private readonly IHubContext<MessageHub> _hubContext;
     private readonly LoveDbContext _dbContext;
     private readonly INlpService _nlpService;
 
-    public MessageService(IHubContext<MessageHub> hubContext, LoveDbContext dbContext, INlpService nlpService)
+    public MessageService(LoveDbContext dbContext, INlpService nlpService)
     {
-        _hubContext = hubContext;
         _dbContext = dbContext;
         _nlpService = nlpService;
     }

@@ -98,7 +98,7 @@ class MembershipManagementPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
+            const Text(
               '会员权益使用记录',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),

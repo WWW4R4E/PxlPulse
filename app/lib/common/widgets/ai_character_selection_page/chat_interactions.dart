@@ -1,6 +1,6 @@
 // 角色展示区
 import 'package:flutter/material.dart';
-import '../services/api_service.dart';
+import 'package:flutter_application_1/common/services/api_service.dart';
 
 class CharacterListPage extends StatefulWidget {
   @override

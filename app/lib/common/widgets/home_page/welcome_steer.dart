@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
 
 class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,12 +18,12 @@ class WelcomePage extends StatelessWidget {
               width: 200,
               height: 200,
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               '欢迎来到星野恋曲',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // 跳转到主页
@@ -32,15 +34,14 @@ class WelcomePage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text('开始恋爱'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.pink, // 按钮颜色
-                onPrimary: Colors.white, // 文字颜色
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                foregroundColor: Colors.white, backgroundColor: Colors.pink, // 文字颜色
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
+              child: const Text('开始恋爱'),
             ),
           ],
         ),

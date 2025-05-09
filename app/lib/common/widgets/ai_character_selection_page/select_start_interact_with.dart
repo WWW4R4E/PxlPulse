@@ -16,6 +16,22 @@ class CharacterInteractionPage extends StatefulWidget {
 }
 
 class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
+  late final TextEditingController _messageController;
+  late final ApiService apiService;
+  String backendResponse = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _messageController = TextEditingController();
+    apiService = ApiService();
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -23,10 +39,10 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
           width: 393,
           height: 531,
           decoration: BoxDecoration(color: const Color(0xFFF5F0E6)),
-          Column(
+          child: Column(
             // 对话框
             children: [
-              dialogue(null);
+              dialogue(''),
             ]
             // 输入框
 
@@ -46,7 +62,7 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
           width: 71,
           height: 71,
           decoration: ShapeDecoration(
-            image: DecorationImage(
+            image: const DecorationImage(
               image: NetworkImage("https://placehold.co/71x71"),
               fit: BoxFit.cover,
             ),
@@ -58,14 +74,14 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
         Container(
           width: 267,
           height: 102,
-          decoration: BoxDecoration(color: const Color(0x7AD9D9D9)),
+          decoration: const BoxDecoration(color: Color(0x7AD9D9D9)),
         ),
         SizedBox(
           width: 205,
           height: 69,
           child: Text(
             context,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
               fontFamily: 'Inter',
@@ -84,18 +100,18 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
         Container(
           width: 393,
           height: 150,
-          decoration: BoxDecoration(color: const Color(0x7AD9D9D9)),
+          decoration: const BoxDecoration(color: Color(0x7AD9D9D9)),
           child: TextField(
             controller: _messageController, // 使用控制器管理输入内容
             maxLines: null, // 允许多行输入
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(16),
               hintText: '请输入消息',
             ),
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         GestureDetector(
           onTap: () async {
             final message = _messageController.text.trim(); // 获取输入框内容
@@ -121,7 +137,7 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
               color: const Color(0xFFD9D9D9),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 '发送',
                 style: TextStyle(

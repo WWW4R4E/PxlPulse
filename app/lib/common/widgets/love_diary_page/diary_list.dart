@@ -1,6 +1,7 @@
-// 日记详情区
-// 全屏展示文字、图片、对话记录片段，编辑、分享功能按钮。 
+// 日记列表区
+// 时间轴卡片式展示，含日期、天气、标题、截图。
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // 用于复制文本到剪贴板
 import 'package:share/share.dart'; // 用于分享功能
 import 'package:url_launcher/url_launcher.dart'; // 用于生成链接
 
@@ -95,7 +96,8 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       '对话记录',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   ...widget.chatRecords.map((record) {
@@ -117,7 +119,8 @@ class _DiaryDetailPageState extends State<DiaryDetailPage> {
 
   void _shareDiaryLink() async {
     // 生成日记链接
-    String diaryLink = 'https://your-app.com/diary/${widget.diaryTitle.replaceAll(' ', '_')}';
+    String diaryLink =
+        'https://your-app.com/diary/${widget.diaryTitle.replaceAll(' ', '_')}';
 
     // 分享链接
     await Share.share(diaryLink);

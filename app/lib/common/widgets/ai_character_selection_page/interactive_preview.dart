@@ -1,8 +1,6 @@
 // 互动预览区
 // 预设对话场景按钮（问候、约会等），点击后角色动画、语音台词展示
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:lottie/lottie.dart';
 import '../../services/api_service.dart';
 
 // 关键句类
