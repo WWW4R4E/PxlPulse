@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/love_diary_page.dart';
 import 'package:flutter_application_1/pages/membership_page.dart';
 import 'package:flutter_application_1/pages/publish_post_page.dart';
-import 'ai_character_selection_page.dart';
+import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
+import 'package:flutter_application_1/pages/social_post_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -17,48 +18,28 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AICharacterSelectionPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, 'pages/ai_character_selection_page');
               },
               child: Text('开始恋爱'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoveDiaryPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, 'pages/love_diary_page');
               },
               child: Text('恋爱日记'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SocialPostPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, 'pages/social_post_page');
               },
               child: Text('社交动态'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MembershipPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, 'pages/membership_page');
               },
               child: Text('会员中心'),
             ),

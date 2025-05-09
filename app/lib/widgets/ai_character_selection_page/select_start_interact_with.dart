@@ -137,12 +137,6 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
       ],
     );
   }
-
-
-  // 获取数据
-  String getMessage(){
-
-  }
 }
 
   

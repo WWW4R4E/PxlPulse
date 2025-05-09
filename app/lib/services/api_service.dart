@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 class ApiService {
   static const String baseUrl = 'http://localhost:5180/api';
+  static final Data _defaultData = Data();
 
   Future<dynamic> login({required String email, required String password}) async {
     final response = await http.post(
@@ -156,5 +157,98 @@ class ApiService {
     } else {
       throw Exception('Failed to read notification');
     }
+  }
+
+  getCharacterInteractions(String characterId) {}
+
+  sendUserInput(String characterId, String userInput) {}
+
+  // 列表查询ai对象（一次12个）
+  Future<List<Character>> fetchCharacters({int page = 0}) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/characters?page=$page'));
+      if (response.statusCode == 200) {
+        final List<dynamic> charactersJson = jsonDecode(response.body);
+        if (charactersJson.isEmpty) {
+          return _defaultData.getDefaultCharacters();
+        }
+        return charactersJson.map<Character>((json) => Character.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load characters');
+      }
+    } catch (e) {
+      print('Error fetching characters: $e');
+      return _defaultData.getDefaultCharacters(); // 返回默认数据
+    }
+  }
+}
+
+class Data {
+  static final Data _instance = Data._(); // 私有构造函数和单例实例
+
+  factory Data() {
+    return _instance;
+  }
+
+  Data._() {}
+
+  List<Character> getDefaultCharacters() {
+    return [
+      Character(
+        name: '角色1',
+        imageUrl: 'assets/image/ai_title_image/1.png',
+        description: '这是角色1的简介。',
+        likes: 100,
+        shares: 50,
+      ),
+      Character(
+        name: '角色2',
+        imageUrl: 'assets/image/ai_title_image/2.png',
+        description: '这是角色2的简介。',
+        likes: 200,
+        shares: 100,
+      ),
+      Character(
+        name: '角色3',
+        imageUrl: 'assets/image/ai_title_image/3.png',
+        description: '这是角色3的简介。',
+        likes: 100,
+        shares: 50,
+      ),
+      Character(
+        name: '角色4',
+        imageUrl: 'assets/image/ai_title_image/4.png',
+        description: '这是角色4的简介。',
+        likes: 200,
+        shares: 100,
+      ),
+      // 添加更多默认角色
+    ];
+  }
+}
+
+class Character {
+  final String name;
+  final String imageUrl;
+  final String description;
+  final int likes;
+  final int shares;
+
+  Character({
+    required this.name,
+    required this.imageUrl,
+    required this.description,
+    required this.likes,
+    required this.shares,
+  });
+
+  factory Character.fromJson(Map<String, dynamic> json) {
+    return Character(
+      name: json['name'],
+      imageUrl: json['imageUrl'],
+      description: json['description'],
+      likes: json['likes'],
+      shares: json['shares'],
+    );
   }
 }

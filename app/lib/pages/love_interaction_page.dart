@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class LoveInteractionPage extends StatelessWidget {
   final int characterId;
 
-  LoveInteractionPage({required this.characterId});
+  LoveInteractionPage({this.characterId = 1});
 
   @override
   Widget build(BuildContext context) {
