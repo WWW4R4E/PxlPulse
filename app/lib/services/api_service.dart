@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-
+// 注意：没有注释的接口不用管，那是我熟悉代码用的
 class ApiService {
   static const String baseUrl = 'http://localhost:5180/api';
   static final Data _defaultData = Data();
@@ -164,6 +165,14 @@ class ApiService {
   sendUserInput(String characterId, String userInput) {}
 
   // 列表查询ai对象（一次12个）
+  /** 传入参数 多少个数据
+   ** 返回参数 
+   *  姓名
+   *  图片链接
+   *  ai简介
+   *  点赞数量
+   *  转发数量
+   */
   Future<List<Character>> fetchCharacters({int page = 0}) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/characters?page=$page'));
@@ -180,6 +189,25 @@ class ApiService {
       print('Error fetching characters: $e');
       return _defaultData.getDefaultCharacters(); // 返回默认数据
     }
+  }
+
+
+  // 获取ai对象，详细数据
+  /**
+    *  Id
+    *  简介
+    *  ai互动能力 ：内含 互动功能名称  互动语言简洁
+    */
+  InteractivePreview getaidescription() {
+
+  }
+
+  // 发送文字获取ai回答
+  /**
+   * 字符串回答
+   */
+  String sendButtonDescription(String str){
+
   }
 }
 

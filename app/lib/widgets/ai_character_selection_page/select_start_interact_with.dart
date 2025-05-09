@@ -101,7 +101,7 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
             final message = _messageController.text.trim(); // 获取输入框内容
             if (message.isNotEmpty) {
               try {
-                final response = await apiService.sendMessage(message);
+                final response = await apiService.sendButtonDescription(message);
                 
                 setState(() {
                   dialogue(response); // 保存后端返回的数据
