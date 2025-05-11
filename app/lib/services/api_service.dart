@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
+import 'package:flutter_application_1/widgets/ai_character_selection_page/interactive_preview.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 // 注意：没有注释的接口不用管，那是我熟悉代码用的
@@ -198,8 +199,8 @@ class ApiService {
     *  简介
     *  ai互动能力 ：内含 互动功能名称  互动语言简洁
     */
-  InteractivePreview getaidescription() {
-
+  InteractivePreview getaidescription(int aiid) {
+    return InteractivePreview(characterId: '', description: '', button: [],);
   }
 
   // 发送文字获取ai回答
@@ -207,7 +208,7 @@ class ApiService {
    * 字符串回答
    */
   String sendButtonDescription(String str){
-
+    return '';
   }
 }
 
