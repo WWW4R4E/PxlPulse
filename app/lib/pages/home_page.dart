@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/common/services/api_service.dart';
 import 'package:flutter_application_1/pages/love_diary_page.dart';
 import 'package:flutter_application_1/pages/membership_page.dart';
-import 'package:flutter_application_1/pages/publish_post_page.dart';
 import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
 import 'package:flutter_application_1/pages/social_post_page.dart';
-import 'package:flutter_application_1/services/api_service.dart';
 
 class HomeData{
   String title = '介绍';
@@ -17,7 +16,7 @@ class Button{
     String introdect = '';
 }
 
-class HomePage extends StatelessWidget {
+class HomeAllPage extends StatelessWidget {
   var homeData = null;
   ApiService apiService = new ApiService();
  

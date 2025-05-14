@@ -1,22 +1,21 @@
 // 选择与开始互动
-// “选择此角色” 按钮，确定后显示交互框支持用户将语句输送到后端，随后后端返回音频与文字进行展示
+// “选择此角色” 按钮，确定后显示交互框支持用户将语句输送到后端，随后后端返回音频与文字进行展示 
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:lottie/lottie.dart';
+import '../../services/api_service.dart';
 
-import '../common/services/api_service.dart';
-
-class CharacterPage extends StatefulWidget {
-  final int characterId;
+class CharacterInteractionPage extends StatefulWidget {
+  final String characterId;
   final String characterName;
 
-  CharacterPage(
-      {this.characterId = 34, this.characterName = ''});
+  CharacterInteractionPage({required this.characterId, required this.characterName});
 
   @override
-  _CharacterInteractionPageState createState() =>
-      _CharacterInteractionPageState();
+  _CharacterInteractionPageState createState() => _CharacterInteractionPageState();
 }
 
-class _CharacterInteractionPageState extends State<CharacterPage> {
+class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
   late final TextEditingController _messageController;
   late final ApiService apiService;
   String backendResponse = '';
@@ -33,25 +32,27 @@ class _CharacterInteractionPageState extends State<CharacterPage> {
     _messageController.dispose();
     super.dispose();
   }
-
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-            width: 393,
-            height: 531,
-            decoration: BoxDecoration(color: const Color(0xFFF5F0E6)),
-            child: Column(
-                // 对话框
-                children: [
-                  dialogue(''),
-                ]
-                // 输入框
+          width: 393,
+          height: 531,
+          decoration: BoxDecoration(color: const Color(0xFFF5F0E6)),
+          child: Column(
+            // 对话框
+            children: [
+              dialogue(''),
+            ]
+            // 输入框
 
-                )),
+          )
+
+        ),
       ],
     );
   }
+
 
   // 对话框
   Widget dialogue(String context) {
@@ -116,9 +117,8 @@ class _CharacterInteractionPageState extends State<CharacterPage> {
             final message = _messageController.text.trim(); // 获取输入框内容
             if (message.isNotEmpty) {
               try {
-                final response =
-                    await apiService.sendButtonDescription(message);
-
+                final response = await apiService.sendButtonDescription(message);
+                
                 setState(() {
                   dialogue(response); // 保存后端返回的数据
                   _messageController.clear(); // 清空输入框
@@ -135,8 +135,7 @@ class _CharacterInteractionPageState extends State<CharacterPage> {
             height: 33,
             decoration: ShapeDecoration(
               color: const Color(0xFFD9D9D9),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: const Center(
               child: Text(
@@ -155,3 +154,5 @@ class _CharacterInteractionPageState extends State<CharacterPage> {
     );
   }
 }
+
+  

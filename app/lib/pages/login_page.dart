@@ -2,8 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
-import 'package:flutter_application_1/widgets/login_page/login.dart';
-import 'package:flutter_application_1/widgets/login_page/register.dart';
+
 
 class InitialData{
   String titleName = '心动瞬间';
@@ -49,7 +48,7 @@ class InitialDataPage extends StatelessWidget {
     return Center(
       child: () {
           Navigator.of(_context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => HomeAllPage()),
           );
         }(),
     );
