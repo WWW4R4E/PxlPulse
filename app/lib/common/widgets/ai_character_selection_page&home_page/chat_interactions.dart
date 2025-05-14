@@ -1,6 +1,7 @@
 // 角色展示区
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/services/api_service.dart';
+
+import '../../index.dart';
 
 class CharacterListPage extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class CharacterListPage extends StatefulWidget {
 }
 
 class _CharacterListPageState extends State<CharacterListPage> {
-  late ApiService apiService;
   List<Character> characters = [];
   bool isLoading = true;
   int currentPage = 0;
@@ -16,14 +16,14 @@ class _CharacterListPageState extends State<CharacterListPage> {
   @override
   void initState() {
     super.initState();
-    apiService = ApiService(); // 注意这里的拼写错误，应该是apiService而不是apiService
     _loadCharacters();
   }
 
   Future<void> _loadCharacters() async {
     try {
       setState(() => isLoading = true);
-      final newCharacters = await apiService.fetchCharacters(page: currentPage);
+      final newCharacters =
+          await CharacterApi().fetchCharacters(page: currentPage);
       setState(() {
         if (currentPage == 0) {
           characters = newCharacters;
@@ -55,27 +55,33 @@ class _CharacterListPageState extends State<CharacterListPage> {
   List<Widget> _buildCharacterRows() {
     List<Widget> rows = [];
     for (int i = 0; i < characters.length; i += 2) {
-      rows.add(_div(context, characters[i], i + 1 < characters.length ? characters[i + 1] : null));
+      rows.add(_div(context, characters[i],
+          i + 1 < characters.length ? characters[i + 1] : null));
     }
     return rows;
   }
 
   // 构建外部盒子
-  Widget _div(BuildContext context, Character? character1, Character? character2) {
+  Widget _div(
+      BuildContext context, Character? character1, Character? character2) {
     return Row(
       children: <Widget>[
-        if (character1 != null) 
+        if (character1 != null)
           Container(
-            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.07), // 设置左边距为屏幕宽度的7%
+            margin: EdgeInsets.only(
+                left:
+                    MediaQuery.of(context).size.width * 0.07), // 设置左边距为屏幕宽度的7%
             child: _centerdiv(character1),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0), // 圆角半径
               border: Border.all(color: Colors.black), // 黑色边框
             ),
           ),
-        if (character2 != null) 
+        if (character2 != null)
           Container(
-            margin: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.07), // 设置右边距为屏幕宽度的7%
+            margin: EdgeInsets.only(
+                right:
+                    MediaQuery.of(context).size.width * 0.07), // 设置右边距为屏幕宽度的7%
             child: _centerdiv(character2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0), // 圆角半径

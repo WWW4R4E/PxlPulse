@@ -1,7 +1,7 @@
 // 互动预览区
 // 预设对话场景按钮（问候、约会等），点击后角色动画、语音台词展示
 import 'package:flutter/material.dart';
-import '../../services/api_service.dart';
+import '../../api/index.dart';
 
 // 关键句类
 class KeySentence {
@@ -32,14 +32,13 @@ class InteractivePreview extends StatefulWidget {
 
 class _InteractivePreviewState extends State<InteractivePreview>
     with SingleTickerProviderStateMixin {
-  late ApiService apiService = ApiService();
   late Future<String> backendResponse;
 
   @override
   void initState() {
     super.initState();
     // 初始化时加载描述信息
-    backendResponse = apiService.getaidescription(widget.characterId) as Future<String>;
+    backendResponse =  CharacterApi().getAiDescription(widget.characterId) as Future<String>;
   }
 
   @override
@@ -150,7 +149,7 @@ class _InteractivePreviewState extends State<InteractivePreview>
         GestureDetector(
           onTap: () async {
             try {
-              final response = await apiService.sendButtonDescription(button.buttondescription);
+              final response = await CharacterApi().sendButtonDescription(button.buttondescription);
               setState(() {
                 backendResponse = Future.value(response); // 更新后端返回的数据
               });

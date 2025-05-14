@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/services/api_service.dart';
-import 'package:flutter_application_1/pages/love_diary_page.dart';
-import 'package:flutter_application_1/pages/membership_page.dart';
-import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
-import 'package:flutter_application_1/pages/social_post_page.dart';
+import '../common/index.dart';
 
 class HomeData{
   String title = '介绍';
@@ -18,11 +14,10 @@ class Button{
 
 class HomeAllPage extends StatelessWidget {
   var homeData = null;
-  ApiService apiService = new ApiService();
  
   @override
   Widget build(BuildContext context) {
-    homeData = apiService.getaidescription(0);
+    homeData = CharacterApi().getAiDescription(0);
     return Scaffold(
       appBar: AppBar(
         title: Text('李航'),
@@ -68,7 +63,7 @@ class HomeAllPage extends StatelessWidget {
             return ElevatedButton(
               onPressed: () {
                 // 这里处理点击事件
-                apiService.sendButtonDescription(button.introdect);
+                CharacterApi().sendButtonDescription(button.introdect);
               },
               child: Text(button.name),
             );

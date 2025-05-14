@@ -1,9 +1,7 @@
 // 选择与开始互动
 // “选择此角色” 按钮，确定后显示交互框支持用户将语句输送到后端，随后后端返回音频与文字进行展示 
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:lottie/lottie.dart';
-import '../../services/api_service.dart';
+import '../../index.dart';
 
 class CharacterInteractionPage extends StatefulWidget {
   final String characterId;
@@ -17,14 +15,12 @@ class CharacterInteractionPage extends StatefulWidget {
 
 class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
   late final TextEditingController _messageController;
-  late final ApiService apiService;
   String backendResponse = '';
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
-    apiService = ApiService();
   }
 
   @override
@@ -117,7 +113,7 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
             final message = _messageController.text.trim(); // 获取输入框内容
             if (message.isNotEmpty) {
               try {
-                final response = await apiService.sendButtonDescription(message);
+                final response = await CharacterApi().sendButtonDescription(message);
                 
                 setState(() {
                   dialogue(response); // 保存后端返回的数据
