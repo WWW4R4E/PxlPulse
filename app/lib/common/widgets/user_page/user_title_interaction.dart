@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/api/api_service.dart';
+import 'package:flutter_application_1/common/api/user_api.dart';
 
-class UserData{
+class UserData {
   String imagetitlesrc = '';
   String nmae = '';
   String createcatetime = '';
@@ -11,12 +12,10 @@ class UserData{
   String interaction = '简介';
   int member = 0; // 属于哪种类型的会员，默认0 为 无会员
 
-  UserData gitUserData(){
-    ApiService apiService = new ApiService();
-    return apiService.getuserinteraction();    // 获取用户详细信息
+  UserData gitUserData() {
+    return UserApi().getUserInteraction(); // 获取用户详细信息
   }
 }
-
 
 class UserProfileWidget extends StatelessWidget {
   UserData userData = UserData().gitUserData();
@@ -36,7 +35,8 @@ class UserProfileWidget extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage(userData.imagetitlesrc), // 替换为实际头像路径
+                backgroundImage:
+                    AssetImage(userData.imagetitlesrc), // 替换为实际头像路径
               ),
               SizedBox(width: 16),
               Expanded(
@@ -45,7 +45,8 @@ class UserProfileWidget extends StatelessWidget {
                   children: [
                     Text(
                       userData.nmae,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
                     Row(

@@ -1,6 +1,6 @@
 // 记录集合
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/api/api_service.dart';
+import 'package:flutter_application_1/common/api/diary_api.dart';
 
 class MyDiaryPage extends StatelessWidget {
   String titlename = '';
@@ -9,7 +9,7 @@ class MyDiaryPage extends StatelessWidget {
   int level = 0;
   List<DiaryData> list;
   MyDiaryPage({required this.level})
-  : list = ApiService().getdiarydata(level);
+  : list = DiaryApi().getDiaryData(level);
   
 
   @override

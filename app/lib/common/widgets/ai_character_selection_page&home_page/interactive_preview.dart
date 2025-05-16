@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/common/api/character_api.dart';
 import '../../api/api_service.dart';
 
 // 关键句类
@@ -43,7 +44,7 @@ class _InteractivePreviewState extends State<InteractivePreview> {
   }
 
   Future<void> _loadData() async {
-    homeData = await apiService.getaidescription(0);
+    homeData = await CharacterApi().getAiDescription(0);
     setState(() {});
   }
 

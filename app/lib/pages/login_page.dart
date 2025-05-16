@@ -1,13 +1,12 @@
 // 初始页面
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
 
-
-class InitialData{
+class InitialData {
   String titleName = '心动瞬间';
-  String conterSpan = '心动瞬间 是一款以星野与 Soul 为灵感打造的 AI 恋爱软件。在这个充满奇幻色彩的虚拟恋爱空间中，用户将开启一场跨越星空与灵魂的浪漫之旅。它为渴望爱、追寻独特情感体验的用户，构建起一座通往理想恋爱的桥梁，让爱在科技与梦幻的交织中绽放。';
-  int number = 1;  // '1为主界面，2为登录，3为注册'
+  String conterSpan =
+      '心动瞬间 是一款以星野与 Soul 为灵感打造的 AI 恋爱软件。在这个充满奇幻色彩的虚拟恋爱空间中，用户将开启一场跨越星空与灵魂的浪漫之旅。它为渴望爱、追寻独特情感体验的用户，构建起一座通往理想恋爱的桥梁，让爱在科技与梦幻的交织中绽放。';
+  int number = 1; // '1为主界面，2为登录，3为注册'
 }
 
 class InitialDataPage extends StatelessWidget {
@@ -54,5 +53,4 @@ class InitialDataPage extends StatelessWidget {
       MaterialPageRoute(builder: (context) => HomeAllPage()),
     );
   }
-
 }

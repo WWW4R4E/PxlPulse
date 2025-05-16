@@ -18,14 +18,12 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterInteractionPageState extends State<CharacterPage> {
   late final TextEditingController _messageController;
-  late final ApiService apiService;
   String backendResponse = '';
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
-    apiService = ApiService();
   }
 
   @override
@@ -117,7 +115,7 @@ class _CharacterInteractionPageState extends State<CharacterPage> {
             if (message.isNotEmpty) {
               try {
                 final response =
-                    await apiService.sendButtonDescription(message);
+                    await ApiService().sendButtonDescription(message);
 
                 setState(() {
                   dialogue(response); // 保存后端返回的数据
