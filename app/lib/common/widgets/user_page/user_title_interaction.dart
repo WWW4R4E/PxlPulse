@@ -1,7 +1,7 @@
 // 用户信息简介
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/services/api_service.dart';
+import 'package:flutter_application_1/common/api/api_service.dart';
 
 class UserData{
   String imagetitlesrc = '';

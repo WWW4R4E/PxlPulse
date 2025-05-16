@@ -1,78 +1,44 @@
+// home_all_page.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/services/api_service.dart';
-import 'package:flutter_application_1/pages/love_diary_page.dart';
-import 'package:flutter_application_1/pages/membership_page.dart';
-import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
-import 'package:flutter_application_1/pages/social_post_page.dart';
+import 'package:flutter_application_1/common/widgets/ai_character_selection_page&home_page/interactive_preview.dart';
+import 'package:flutter_application_1/common/widgets/ai_character_selection_page&home_page/select_start_interact_with.dart';
 
-class HomeData{
-  String title = '介绍';
-  var button;
-  
-}
-
-class Button{
-    String name = '';
-    String introdect = '';
-}
 
 class HomeAllPage extends StatelessWidget {
-  var homeData = null;
-  ApiService apiService = new ApiService();
- 
   @override
   Widget build(BuildContext context) {
-    homeData = apiService.getaidescription(0);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('李航'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            gitintrodect(),
-            gitbuttons(),
-            
-          ],
-        ),
+      appBar: AppBar(title: Text("角色互动主页")),
+      body: Column(
+        children: [
+          // 角色介绍和按钮区域
+          Expanded(
+            flex: 2,
+            child: InteractivePreview(
+              characterId: 3,
+              description: '这是一个描述',
+              button: [
+                KeySentence(buttonname: '按钮1', buttondescription: '这是第一个按钮的说明'),
+                KeySentence(buttonname: '按钮2', buttondescription: '这是第二个按钮的说明'),
+                KeySentence(buttonname: '按钮3', buttondescription: '这是第三个按钮的说明'),
+                KeySentence(buttonname: '按钮4', buttondescription: '这是第四个按钮的说明'),
+                KeySentence(buttonname: '按钮5', buttondescription: '这是第五个按钮的说明'),
+                KeySentence(buttonname: '按钮6', buttondescription: '这是第六个按钮的说明'),
+                KeySentence(buttonname: '按钮7', buttondescription: '这是第七个按钮的说明'),
+                KeySentence(buttonname: '按钮8', buttondescription: '这是第八个按钮的说明'),
+              ],
+            ),
+          ),
+
+          Divider(height: 1),
+
+          // 互动聊天区域
+          Expanded(
+            flex: 5,
+            child: CharacterInteractionArea(characterId: '3', characterName: '角色名字'),
+          ),
+        ],
       ),
     );
-  }
-
-  // 简介
-  Widget gitintrodect(){
-    return Container(
-      padding: EdgeInsets.all(8.0),
-      child: Text(
-        homeData.title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  // 按钮组
-  Widget gitbuttons(){
-    return Column(
-      children: [
-        button(homeData.button.sublist(0, 4)),
-        button(homeData.button.sublist(4, 8)),
-      ],
-    );
-  }
-
-  // 按钮
-  Widget button(List<Button> buttons){
-    return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: buttons.map((button) {
-            return ElevatedButton(
-              onPressed: () {
-                // 这里处理点击事件
-                apiService.sendButtonDescription(button.introdect);
-              },
-              child: Text(button.name),
-            );
-          }).toList(),
-        );
   }
 }

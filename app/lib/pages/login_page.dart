@@ -18,12 +18,10 @@ class InitialDataPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     return  Scaffold(
-      appBar: AppBar(
-        title: Text('初始页面'),
-      ),
       body: Center(
         child: FractionallySizedBox(
             widthFactor: 1, // 宽度为父容器宽度的100%
+            heightFactor: 1, // 高度为父容器宽度的100%
             child: Container(
               // 主界面
               decoration: BoxDecoration(
@@ -34,23 +32,26 @@ class InitialDataPage extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(15),
               ),
-               child: Center(
-                child: judgmentgitPage(initialData)
-              )
+          child: Center( 
+            child: ElevatedButton(
+              onPressed: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  judgmentgitPage(initialData);
+                });
+              },
+              child: Text("欢迎进入"),
             ),
+          ),
         )   
       )
+     )
     );
   }
 
   // 判断页面
-  Widget judgmentgitPage(InitialData initialData){
-    return Center(
-      child: () {
-          Navigator.of(_context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeAllPage()),
-          );
-        }(),
+  void judgmentgitPage(InitialData initialData){
+    Navigator.of(_context).pushReplacement(
+      MaterialPageRoute(builder: (context) => HomeAllPage()),
     );
   }
 

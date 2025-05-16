@@ -1,3 +1,3 @@
-library api;
+library services;
 
 // export './xxxx.dart';

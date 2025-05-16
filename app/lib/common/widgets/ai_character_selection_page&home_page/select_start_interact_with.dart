@@ -1,29 +1,34 @@
-// 选择与开始互动
-// “选择此角色” 按钮，确定后显示交互框支持用户将语句输送到后端，随后后端返回音频与文字进行展示 
+// character_interaction_area.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:lottie/lottie.dart';
-import '../../services/api_service.dart';
+import 'package:flutter_application_1/common/api/api_service.dart';
 
-class CharacterInteractionPage extends StatefulWidget {
+class CharacterInteractionArea extends StatefulWidget {
   final String characterId;
   final String characterName;
 
-  CharacterInteractionPage({required this.characterId, required this.characterName});
+  const CharacterInteractionArea({
+    Key? key,
+    required this.characterId,
+    required this.characterName,
+  }) : super(key: key);
 
   @override
-  _CharacterInteractionPageState createState() => _CharacterInteractionPageState();
+  _CharacterInteractionAreaState createState() => _CharacterInteractionAreaState();
 }
 
-class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
-  late final TextEditingController _messageController;
-  late final ApiService apiService;
-  String backendResponse = '';
+class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
+  late TextEditingController _messageController;
+  late FlutterTts flutterTts;
+  late ApiService apiService;
+
+  List<Map<String, String>> conversation = [];
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
+    flutterTts = FlutterTts();
     apiService = ApiService();
   }
 
@@ -32,127 +37,113 @@ class _CharacterInteractionPageState extends State<CharacterInteractionPage> {
     _messageController.dispose();
     super.dispose();
   }
+
+  Future<void> _sendMessage(String message) async {
+    if (message.trim().isEmpty) return;
+
+    // 添加用户发送的消息到对话列表
+    setState(() {
+      conversation.add({'user': message});
+    });
+
+    _messageController.clear();
+
+    try {
+      final response = await apiService.sendButtonDescription(message);
+      await flutterTts.speak(response);
+
+      // 添加机器人回复的消息到对话列表
+      setState(() {
+        conversation.add({'bot': response});
+      });
+    } catch (e) {
+      // 在对话列表中添加错误提示信息，作为机器人的回复
+      setState(() {
+        conversation.add({
+          'bot': '请确定当前网络状态，再稍后重试!',
+        });
+      });
+    }
+  }
+  
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // 对话历史区域
+        Expanded(
+          child: ListView.builder(
+            itemCount: conversation.length,
+            itemBuilder: (context, index) {
+              final item = conversation[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (item.containsKey('user'))
+                      Container(
+                        padding: EdgeInsets.all(12),
+                        margin: EdgeInsets.only(bottom: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(item['user']!),
+                      ),
+                    if (item.containsKey('bot'))
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(child: Icon(Icons.person)),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(item['bot']!),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+
+        // 输入框和发送按钮
         Container(
-          width: 393,
-          height: 531,
-          decoration: BoxDecoration(color: const Color(0xFFF5F0E6)),
-          child: Column(
-            // 对话框
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          color: Colors.grey[200],
+          child: Row(
             children: [
-              dialogue(''),
-            ]
-            // 输入框
-
-          )
-
-        ),
-      ],
-    );
-  }
-
-
-  // 对话框
-  Widget dialogue(String context) {
-    return Column(
-      children: [
-        Container(
-          width: 71,
-          height: 71,
-          decoration: ShapeDecoration(
-            image: const DecorationImage(
-              image: NetworkImage("https://placehold.co/71x71"),
-              fit: BoxFit.cover,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(35.50),
-            ),
-          ),
-        ),
-        Container(
-          width: 267,
-          height: 102,
-          decoration: const BoxDecoration(color: Color(0x7AD9D9D9)),
-        ),
-        SizedBox(
-          width: 205,
-          height: 69,
-          child: Text(
-            context,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontFamily: 'Inter',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 输入框
-  Widget inputBox(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 393,
-          height: 150,
-          decoration: const BoxDecoration(color: Color(0x7AD9D9D9)),
-          child: TextField(
-            controller: _messageController, // 使用控制器管理输入内容
-            maxLines: null, // 允许多行输入
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(16),
-              hintText: '请输入消息',
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () async {
-            final message = _messageController.text.trim(); // 获取输入框内容
-            if (message.isNotEmpty) {
-              try {
-                final response = await apiService.sendButtonDescription(message);
-                
-                setState(() {
-                  dialogue(response); // 保存后端返回的数据
-                  _messageController.clear(); // 清空输入框
-                });
-              } catch (e) {
-                setState(() {
-                  backendResponse = 'Error: $e'; // 保存错误信息
-                });
-              }
-            }
-          },
-          child: Container(
-            width: 76,
-            height: 33,
-            decoration: ShapeDecoration(
-              color: const Color(0xFFD9D9D9),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            child: const Center(
-              child: Text(
-                '发送',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: TextField(
+                  controller: _messageController,
+                  decoration: InputDecoration(
+                    hintText: "输入消息...",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-            ),
+              IconButton(
+                icon: Icon(Icons.send),
+                onPressed: () {
+                  final msg = _messageController.text;
+                  if (msg.isNotEmpty) {
+                    _sendMessage(msg);
+                  }
+                },
+              )
+            ],
           ),
         ),
       ],
     );
   }
 }
-
-  

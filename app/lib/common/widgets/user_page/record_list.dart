@@ -1,6 +1,6 @@
 // 记录集合
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/services/api_service.dart';
+import 'package:flutter_application_1/common/api/api_service.dart';
 
 class MyDiaryPage extends StatelessWidget {
   String titlename = '';
@@ -83,11 +83,11 @@ class DiaryCard extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '日记1',
+          name,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        Text('简介'),
+        Text(intercation),
         SizedBox(height: 8),
         Container(
           width: 100,

@@ -2,7 +2,7 @@
 // “选择此角色” 按钮，确定后显示交互框支持用户将语句输送到后端，随后后端返回音频与文字进行展示
 import 'package:flutter/material.dart';
 
-import '../common/services/api_service.dart';
+import '../common/api/api_service.dart';
 
 class CharacterPage extends StatefulWidget {
   final int characterId;

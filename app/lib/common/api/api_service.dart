@@ -204,7 +204,16 @@ class ApiService {
     *  ai互动能力 ：内含 互动功能名称  互动语言简洁
     */
   InteractivePreview getaidescription(int aiid) {
-    return InteractivePreview(characterId: 3, description: '', button: [],);
+    return InteractivePreview(characterId: 3, description: '简介1', button: [
+      KeySentence(buttonname: '按钮1', buttondescription: '描述1'),
+      KeySentence(buttonname: '按钮2', buttondescription: '描述2'),
+      KeySentence(buttonname: '按钮3', buttondescription: '描述3'),
+      KeySentence(buttonname: '按钮4', buttondescription: '描述4'),
+      KeySentence(buttonname: '按钮5', buttondescription: '描述5'),
+      KeySentence(buttonname: '按钮6', buttondescription: '描述6'),
+      KeySentence(buttonname: '按钮7', buttondescription: '描述7'),
+      KeySentence(buttonname: '按钮8', buttondescription: '描述8'),
+]   );
   }
 
   // 发送文字获取ai回答
@@ -212,7 +221,7 @@ class ApiService {
    * 字符串回答
    */
   String sendButtonDescription(String str){
-    return '';
+    return 'ssssss';
   }
 
   // 获取用户详细信息
