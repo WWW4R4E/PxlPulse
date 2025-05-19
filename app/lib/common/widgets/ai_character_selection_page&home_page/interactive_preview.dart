@@ -93,7 +93,7 @@ class _InteractivePreviewState extends State<InteractivePreview> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: buttons.map((button) {
         return FractionallySizedBox(
-          widthFactor: 0.5, // 设置宽度为父容器宽度的一半
+     
           child: Padding(
             padding: const EdgeInsets.all(4.0),
             child: ElevatedButton(

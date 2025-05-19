@@ -29,7 +29,19 @@ class CharacterApi {
   }
 
   InteractivePreview getAiDescription(int aiId) {
-    return InteractivePreview(characterId: aiId, description: '', button: []);
+    return InteractivePreview(characterId: 3,
+              description: '这是一个描述',
+              button: [
+                KeySentence(buttonname: '按钮1', buttondescription: '这是第一个按钮的说明'),
+                KeySentence(buttonname: '按钮2', buttondescription: '这是第二个按钮的说明'),
+                KeySentence(buttonname: '按钮3', buttondescription: '这是第三个按钮的说明'),
+                KeySentence(buttonname: '按钮4', buttondescription: '这是第四个按钮的说明'),
+                KeySentence(buttonname: '按钮5', buttondescription: '这是第五个按钮的说明'),
+                KeySentence(buttonname: '按钮6', buttondescription: '这是第六个按钮的说明'),
+                KeySentence(buttonname: '按钮7', buttondescription: '这是第七个按钮的说明'),
+                KeySentence(buttonname: '按钮8', buttondescription: '这是第八个按钮的说明'),
+              ],
+          );
   }
 
   String sendButtonDescription(String str) {
