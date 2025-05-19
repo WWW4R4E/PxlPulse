@@ -1,4 +1,3 @@
-// character_interaction_area.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_application_1/common/api/api_service.dart';
@@ -41,7 +40,6 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
   Future<void> _sendMessage(String message) async {
     if (message.trim().isEmpty) return;
 
-    // 添加用户发送的消息到对话列表
     setState(() {
       conversation.add({'user': message});
     });
@@ -51,13 +49,10 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
     try {
       final response = await apiService.sendButtonDescription(message);
       await flutterTts.speak(response);
-
-      // 添加机器人回复的消息到对话列表
       setState(() {
         conversation.add({'bot': response});
       });
     } catch (e) {
-      // 在对话列表中添加错误提示信息，作为机器人的回复
       setState(() {
         conversation.add({
           'bot': '请确定当前网络状态，再稍后重试!',
@@ -65,49 +60,47 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // 对话历史区域
         Expanded(
           child: ListView.builder(
             itemCount: conversation.length,
             itemBuilder: (context, index) {
               final item = conversation[index];
+              final isUserMessage = item.containsKey('user');
+
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
                   children: [
-                    if (item.containsKey('user'))
-                      Container(
+                    if (!isUserMessage)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/ai_avatar.png'), // AI's avatar image
+                        ),
+                      ),
+                    Expanded(
+                      child: Container(
                         padding: EdgeInsets.all(12),
-                        margin: EdgeInsets.only(bottom: 4),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.2),
+                          color: isUserMessage ? Colors.blue.withOpacity(0.2) : Colors.grey.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(item['user']!),
+                        child: Text(item.values.first),
                       ),
-                    if (item.containsKey('bot'))
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(child: Icon(Icons.person)),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(item['bot']!),
-                            ),
-                          ),
-                        ],
+                    ),
+                    if (isUserMessage)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/user_avatar.png'), // User's avatar image
+                        ),
                       ),
                   ],
                 ),
@@ -115,8 +108,6 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
             },
           ),
         ),
-
-        // 输入框和发送按钮
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           color: Colors.grey[200],
