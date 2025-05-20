@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => InitialDataPage(), // 首页为登录页
+        '/': (context) => HomePage(), // 首页为登录页
         '/main': (context) => MainPage(), // 主页面（带底部导航）
       },
     );
