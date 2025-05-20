@@ -13,9 +13,6 @@ class RegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('初始页面'),
-      ),
       body: Center(
         child: FractionallySizedBox(
           widthFactor: 1, // 宽度为父容器宽度的100%

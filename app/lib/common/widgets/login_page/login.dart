@@ -1,11 +1,9 @@
 // 初始页面
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/common/widgets/login_page/initial.dart';
 import 'package:flutter_application_1/common/widgets/login_page/register.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
-
-
+import 'package:flutter_application_1/pages/login_page.dart';
 
 class LoginPage extends StatelessWidget {
   InitialData initialData = new InitialData();
@@ -15,10 +13,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('初始页面'),
-      ),
-      body: Center(
+    body: Center(
         child: FractionallySizedBox(
           widthFactor: 1, // 宽度为父容器宽度的100%
           child: GestureDetector(

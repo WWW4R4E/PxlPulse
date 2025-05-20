@@ -6,3 +6,4 @@ export 'login_page.dart';
 export 'love_diary_page.dart';
 export 'membership_page.dart';
 export 'social_post_page.dart';
+export 'friends_page.dart';

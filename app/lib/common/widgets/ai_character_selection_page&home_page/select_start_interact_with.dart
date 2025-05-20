@@ -114,22 +114,38 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
           child: Row(
             children: [
               Expanded(
-                child: TextField(
-                  controller: _messageController,
-                  decoration: InputDecoration(
-                    hintText: "输入消息...",
-                    border: OutlineInputBorder(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: "输入消息...",
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
                   ),
                 ),
               ),
-              IconButton(
-                icon: Icon(Icons.send),
+              SizedBox(width: 16),
+              ElevatedButton(
                 onPressed: () {
                   final msg = _messageController.text;
                   if (msg.isNotEmpty) {
                     _sendMessage(msg);
                   }
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.purple,
+                  onPrimary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                child: Text("发送"),
               )
             ],
           ),
