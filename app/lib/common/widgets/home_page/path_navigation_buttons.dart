@@ -28,8 +28,7 @@ class PathNavigationButtons extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.purple,
-                onPrimary: Colors.white,
+                foregroundColor: Colors.white, backgroundColor: Colors.purple,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),

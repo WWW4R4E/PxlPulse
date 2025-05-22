@@ -138,8 +138,7 @@ class _CharacterInteractionAreaState extends State<CharacterInteractionArea> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.purple,
-                  onPrimary: Colors.white,
+                  foregroundColor: Colors.white, backgroundColor: Colors.purple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),

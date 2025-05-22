@@ -17,4 +17,4 @@ pluginManagement {
 
 include ":app"
 
-apply from: "${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+// Removed app_plugin_loader.gradle reference as it's no longer needed

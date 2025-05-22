@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/widgets/ai_character_selection_page&home_page/interactive_preview.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,19 +30,20 @@ class CharacterApi {
   }
 
   InteractivePreview getAiDescription(int aiId) {
-    return InteractivePreview(characterId: 3,
-              description: '这是一个描述',
-              button: [
-                KeySentence(buttonname: '按钮1', buttondescription: '这是第一个按钮的说明'),
-                KeySentence(buttonname: '按钮2', buttondescription: '这是第二个按钮的说明'),
-                KeySentence(buttonname: '按钮3', buttondescription: '这是第三个按钮的说明'),
-                KeySentence(buttonname: '按钮4', buttondescription: '这是第四个按钮的说明'),
-                KeySentence(buttonname: '按钮5', buttondescription: '这是第五个按钮的说明'),
-                KeySentence(buttonname: '按钮6', buttondescription: '这是第六个按钮的说明'),
-                KeySentence(buttonname: '按钮7', buttondescription: '这是第七个按钮的说明'),
-                KeySentence(buttonname: '按钮8', buttondescription: '这是第八个按钮的说明'),
-              ],
-          );
+    return InteractivePreview(
+      characterId: 3,
+      description: Text('这是一个描述'),
+      button: [
+        KeySentence(buttonname: '按钮1', buttondescription: '这是第一个按钮的说明'),
+        KeySentence(buttonname: '按钮2', buttondescription: '这是第二个按钮的说明'),
+        KeySentence(buttonname: '按钮3', buttondescription: '这是第三个按钮的说明'),
+        KeySentence(buttonname: '按钮4', buttondescription: '这是第四个按钮的说明'),
+        KeySentence(buttonname: '按钮5', buttondescription: '这是第五个按钮的说明'),
+        KeySentence(buttonname: '按钮6', buttondescription: '这是第六个按钮的说明'),
+        KeySentence(buttonname: '按钮7', buttondescription: '这是第七个按钮的说明'),
+        KeySentence(buttonname: '按钮8', buttondescription: '这是第八个按钮的说明'),
+      ],
+    );
   }
 
   String sendButtonDescription(String str) {

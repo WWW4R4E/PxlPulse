@@ -1,18 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application_1/common/widgets/ai_character_selection_page&home_page/interactive_preview.dart';
 import 'package:flutter_application_1/common/widgets/user_page/record_list.dart';
 import 'package:flutter_application_1/common/widgets/user_page/user_title_interaction.dart';
-import 'package:flutter_application_1/pages/ai_character_selection_page.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
+
 // 注意：没有注释的接口不用管，那是我熟悉代码用的
 class ApiService {
   static const String baseUrl = 'http://localhost:5180/api';
   static final Data _defaultData = Data();
 
-
-  Future<dynamic> login({required String email, required String password}) async {
+  Future<dynamic> login(
+      {required String email, required String password}) async {
     final response = await http.post(
       Uri.parse('$baseUrl/Auth/login'),
       headers: <String, String>{
@@ -180,13 +180,16 @@ class ApiService {
    */
   Future<List<Character>> fetchCharacters({int page = 0}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/characters?page=$page'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/characters?page=$page'));
       if (response.statusCode == 200) {
         final List<dynamic> charactersJson = jsonDecode(response.body);
         if (charactersJson.isEmpty) {
           return _defaultData.getDefaultCharacters();
         }
-        return charactersJson.map<Character>((json) => Character.fromJson(json)).toList();
+        return charactersJson
+            .map<Character>((json) => Character.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load characters');
       }
@@ -196,7 +199,6 @@ class ApiService {
     }
   }
 
-
   // 获取ai对象，详细数据
   /**
     *  Id
@@ -204,23 +206,38 @@ class ApiService {
     *  ai互动能力 ：内含 互动功能名称  互动语言简洁
     */
   InteractivePreview getaidescription(int aiid) {
-    return InteractivePreview(characterId: 3, description: '简介1', button: [
-      KeySentence(buttonname: '按钮1', buttondescription: '描述1'),
-      KeySentence(buttonname: '按钮2', buttondescription: '描述2'),
-      KeySentence(buttonname: '按钮3', buttondescription: '描述3'),
-      KeySentence(buttonname: '按钮4', buttondescription: '描述4'),
-      KeySentence(buttonname: '按钮5', buttondescription: '描述5'),
-      KeySentence(buttonname: '按钮6', buttondescription: '描述6'),
-      KeySentence(buttonname: '按钮7', buttondescription: '描述7'),
-      KeySentence(buttonname: '按钮8', buttondescription: '描述8'),
-]   );
+    return InteractivePreview(
+        characterId: 3,
+        description: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: EdgeInsets.all(16),
+          child: Text(
+            '简介1\n第二行\n第三行',
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+        button: [
+          KeySentence(buttonname: '按钮1', buttondescription: '描述1'),
+          KeySentence(buttonname: '按钮2', buttondescription: '描述2'),
+          KeySentence(buttonname: '按钮3', buttondescription: '描述3'),
+          KeySentence(buttonname: '按钮4', buttondescription: '描述4'),
+          KeySentence(buttonname: '按钮5', buttondescription: '描述5'),
+          KeySentence(buttonname: '按钮6', buttondescription: '描述6'),
+          KeySentence(buttonname: '按钮7', buttondescription: '描述7'),
+          KeySentence(buttonname: '按钮8', buttondescription: '描述8'),
+        ]);
   }
 
   // 发送文字获取ai回答
   /**
    * 字符串回答
    */
-  String sendButtonDescription(String str){
+  String sendButtonDescription(String str) {
     return 'ssssss';
   }
 
@@ -233,7 +250,6 @@ class ApiService {
     return UserData();
   }
 
-
   // 获取记录数据
   /**
    * 用户id获取
@@ -245,11 +261,11 @@ class ApiService {
    */
   List<DiaryData> getdiarydata(int level) {
     return [
-    DiaryData(name: '日记1', interaction: '互动信息1'),
-    DiaryData(name: '日记2', interaction: '互动信息2'),
-    DiaryData(name: '日记3', interaction: '互动信息3'),
-    // 可以继续添加更多日记数据...
-  ];
+      DiaryData(name: '日记1', interaction: '互动信息1'),
+      DiaryData(name: '日记2', interaction: '互动信息2'),
+      DiaryData(name: '日记3', interaction: '互动信息3'),
+      // 可以继续添加更多日记数据...
+    ];
   }
 }
 
@@ -297,8 +313,8 @@ class Data {
   }
 }
 
-class user{
-  int userId = 0; 
+class user {
+  int userId = 0;
 }
 
 class Character {

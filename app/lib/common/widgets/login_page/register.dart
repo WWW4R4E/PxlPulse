@@ -154,8 +154,7 @@ class RegisterPage extends StatelessWidget {
                         // 发送验证码逻辑
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.white,
-                        onPrimary: const Color(0xFF1A237E),
+                        foregroundColor: const Color(0xFF1A237E), backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(3),
                         ),

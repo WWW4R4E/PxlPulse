@@ -19,7 +19,7 @@ class KeySentence {
 
 class InteractivePreview extends StatefulWidget {
   final int characterId;
-  final String description;
+  final Widget description;
   final List<KeySentence> button;
 
   const InteractivePreview({
@@ -67,10 +67,7 @@ class _InteractivePreviewState extends State<InteractivePreview> {
   Widget gitintrodect(){
     return Container(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-        homeData.description,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
+      child: widget.description,
     );
   }
 
